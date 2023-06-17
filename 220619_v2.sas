@@ -1,7 +1,7 @@
 LIBNAME TMP1 'D:\Downloads';
-/*Cor_HNCA_RADI_CHEMO_CVA¬°¤w¦X¨Ö©ñ¤ÆÀø¡A¹Lµ{¤£¦b³oÃä*/
-***Step6: ¸ê®Æ¾ã²z&²Î­p¤ÀªR;
-*6-1: «Ø¥ßhnÅÜ¼Æ¡A±N¯e¯f¤À¬°ÀYÀVÀù»P»ó«|Àù;
+/*Cor_HNCA_RADI_CHEMO_CVAç‚ºå·²åˆä½µæ”¾åŒ–ç™‚ï¼Œéç¨‹ä¸åœ¨é€™é‚Š*/
+***Step6: è³‡æ–™æ•´ç†&çµ±è¨ˆåˆ†æ;
+*6-1: å»ºç«‹hnè®Šæ•¸ï¼Œå°‡ç–¾ç—…åˆ†ç‚ºé ­é ¸ç™Œèˆ‡é¼»å’½ç™Œ;
 DATA TMP1.CVAALL;
 SET TMP1.Cor_HNCA_RADI_CHEMO_CVA;
 attrib HN length=$10;
@@ -20,7 +20,7 @@ PROC FREQ DATA=TMP1.CVAALL;
 TABLE ID_SEX*HN;
 RUN;
 
-*6-2: ¦]¬°©Ê§O¦³U¬°¨Ò¥~¡AÁÙ¦³¿òº|­È¡A¤£©ñ¤J°Q½×;
+*6-2: å› ç‚ºæ€§åˆ¥æœ‰Uç‚ºä¾‹å¤–ï¼Œé‚„æœ‰éºæ¼å€¼ï¼Œä¸æ”¾å…¥è¨è«–;
 DATA TMP1.CVAALL;
 SET TMP1.CVAALL;
 IF ID_SEX='U' THEN DELETE;
@@ -30,17 +30,17 @@ IF CHEMO='.' THEN CHEMO=0;
 RUN;
 *8977;
 
-*6-3: ­pºâ¦~ÄÖ;
+*6-3: è¨ˆç®—å¹´é½¡;
 DATA TMP1.CVAALL;
 SET TMP1.CVAALL;
-birth_year= SUBSTR(ID_BIRTHDAY,1,4); *¦]¬°®æ¦¡¬İ°_¨Ó¥u¦³¦~¤ë¨S¦³¤é¡A¥B«D¤é´Á®æ¦¡¡A¨ú«e¥|½X¬°¥X¥Í¦~;
+birth_year= SUBSTR(ID_BIRTHDAY,1,4); *å› ç‚ºæ ¼å¼çœ‹èµ·ä¾†åªæœ‰å¹´æœˆæ²’æœ‰æ—¥ï¼Œä¸”éæ—¥æœŸæ ¼å¼ï¼Œå–å‰å››ç¢¼ç‚ºå‡ºç”Ÿå¹´;
 MED_DAY=INPUT(FUNC_DATE, YYMMDD8.);
 FORMAT MED_DAY YYMMDD10.;
-AGE=round((MED_DAY-birth_year)/365.25, 0.1); **ºâ¥X´NÂåªº¤é´Á¬°´X·³¡A¥|±Ë¤­¤J¨ì¤p¼Æ²Ä¤@¦ì;
+AGE=round((MED_DAY-birth_year)/365.25, 0.1); **ç®—å‡ºå°±é†«çš„æ—¥æœŸç‚ºå¹¾æ­²ï¼Œå››æ¨äº”å…¥åˆ°å°æ•¸ç¬¬ä¸€ä½;
 RUN;
 
-*6-4: ³sÄòÅÜ¶µ;
-*6-4-1: ¦~ÄÖ*CVA;
+*6-4: é€£çºŒè®Šé …;
+*6-4-1: å¹´é½¡*CVA;
 PROC MEANS DATA=TMP1.CVAALL Maxdec=2 n mean std var min q1 median q3 max ;
 CLASS hn CVA;
 VAR AGE;
@@ -48,23 +48,23 @@ RUN;
 proc sort data=TMP1.CVA_ALL;
 by age;
 run;
-*µe¹Ï: »ó«|Àù¡BÀYÀVÀù¤@°_;
-*ª½¤è¹Ï;
+*ç•«åœ–: é¼»å’½ç™Œã€é ­é ¸ç™Œä¸€èµ·;
+*ç›´æ–¹åœ–;
 proc sgpanel data=TMP1.CVAALL ;
-panelby hn / novarname sparse columns = 2 rows = 1; /*¤TÄæ¨â¦C*/
-*rowaxis label="Percentage (%)"; /*¤À§Oµ¹©wY, X®y¼Ğ¶b¤§¦WºÙ*/
+panelby hn / novarname sparse columns = 2 rows = 1; /*ä¸‰æ¬„å…©åˆ—*/
+*rowaxis label="Percentage (%)"; /*åˆ†åˆ¥çµ¦å®šY, Xåº§æ¨™è»¸ä¹‹åç¨±*/
 *colaxis label = "AGE";
   histogram age / group=cva transparency=0.5 binwidth=1;       /* SAS 9.4m2 */
   density age / type=kernel group=cva ; /* overlay density estimates */
 run;
 *Box-plot;
 proc sgpanel data=TMP1.CVAALL ;
-panelby hn / novarname sparse columns = 2 rows = 1; /*¤TÄæ¨â¦C*/
-*rowaxis label="Percentage (%)"; /*¤À§Oµ¹©wY, X®y¼Ğ¶b¤§¦WºÙ*/
+panelby hn / novarname sparse columns = 2 rows = 1; /*ä¸‰æ¬„å…©åˆ—*/
+*rowaxis label="Percentage (%)"; /*åˆ†åˆ¥çµ¦å®šY, Xåº§æ¨™è»¸ä¹‹åç¨±*/
 *colaxis label = "AGE";
 hbox age / group=cva;
 run;
-*¦~ÄÖ¤À²Õ;
+*å¹´é½¡åˆ†çµ„;
 data TMP1.CVAALL ;
 set TMP1.CVAALL ;
 if age<40 then age_g='30-39';
@@ -72,14 +72,14 @@ else if age>=40 & age<50 then age_g='40-49';
 else age_g=.;
 run;
 
-*6-5: ­«·s­pºâCVA_YR¬°CVA_YR2;
+*6-5: é‡æ–°è¨ˆç®—CVA_YRç‚ºCVA_YR2;
 DATA TMP1.CVAALL ;
 SET TMP1.CVAALL ;
 cva_yr2=intck('day', index, brain_index)/365.25;
 RUN;
 
-*6-6: ¤ÀÀÉ;
-*»ó«|Àù­Ó®×;
+*6-6: åˆ†æª”;
+*é¼»å’½ç™Œå€‹æ¡ˆ;
 DATA TMP1.CVA147;
 SET TMP1.CVAALL ;
 IF HN='NPC'; 
@@ -89,7 +89,7 @@ PROC FREQ DATA=TMP1.CVA147;
 TABLES DM Liver MI Lip HTN  CVA;
 RUN;
 
-*¨ä¥LÀYÀVÀù­Ó®×;
+*å…¶ä»–é ­é ¸ç™Œå€‹æ¡ˆ;
 DATA TMP1.CVA_ELSE;
 SET TMP1.CVAALL ;
 IF HN='HNC'; 
@@ -100,45 +100,45 @@ TABLES DM Liver MI Lip HTN  CVA;
 RUN;
 
 
-*6-7: Ãş§OÅÜ¶µ;
-*6-7-1: Æ[¹îCVA¼Æ;
+*6-7: é¡åˆ¥è®Šé …;
+*6-7-1: è§€å¯ŸCVAæ•¸;
 PROC FREQ DATA=TMP1.CVAALL;
 TABLES hn*CVA;
 RUN;
 
-*6-7-2: ¥d¤è/¶O³·;
-*1.»ó«|Àù;
+*6-7-2: å¡æ–¹/è²»é›ª;
+*1.é¼»å’½ç™Œ;
 PROC FREQ DATA=TMP1.CVA147;
 TABLES  CVA*ID_SEX  CVA*AGE_G CVA*dm  CVA*Liver 
 CVA*MI  CVA*Lip  CVA*HTN  CVA*RADI   CVA*CHEMO/ expected chisq fisher;
 RUN;
-*2.ÀYÀVÀù;
+*2.é ­é ¸ç™Œ;
 PROC FREQ DATA=TMP1.CVA_ELSE;
 TABLES  CVA*ID_SEX  CVA*AGE_G CVA*dm  CVA*Liver 
 CVA*MI  CVA*Lip  CVA*HTN  CVA*RADI   CVA*CHEMO/ expected chisq or;
 RUN;
 
 
-*6-8: KM¦s¬¡¦±½u Kaplan-Meier Method;
-*1.»ó«|Àù;
-*¥H©Ê§O¬°¤À²Õ;
+*6-8: KMå­˜æ´»æ›²ç·š Kaplan-Meier Method;
+*1.é¼»å’½ç™Œ;
+*ä»¥æ€§åˆ¥ç‚ºåˆ†çµ„;
 proc lifetest data=TMP1.CVA147 plot=survival(test nocensor) ;
 time cva_yr2*cva(0); 
 STRATA id_SEX;
 run;
-*¥H¦~ÄÖ¬°¤À²Õ;
+*ä»¥å¹´é½¡ç‚ºåˆ†çµ„;
 proc lifetest data=TMP1.CVA147 plot=survival(test nocensor) ;
 time cva_yr2*cva(0); 
 STRATA age_g;
 run;
 
-*2.ÀYÀVÀù;
-*¥H©Ê§O¬°¤À²Õ;
+*2.é ­é ¸ç™Œ;
+*ä»¥æ€§åˆ¥ç‚ºåˆ†çµ„;
 proc lifetest data=TMP1.CVA_ELSE plot=survival(test nocensor) ;
 time cva_yr2*cva(0); 
 STRATA id_SEX;
 run;
-*¥H¦~ÄÖ¬°¤À²Õ;
+*ä»¥å¹´é½¡ç‚ºåˆ†çµ„;
 proc lifetest data=TMP1.CVA_ELSE plot=survival(test nocensor) ;
 time cva_yr2*cva(0); 
 STRATA age_g;
@@ -146,8 +146,8 @@ run;
 
 
 *Cox proportional hazard regression model;
-*1.»ó«|Àù;
-*cva_yr2¤À²Õ;
+*1.é¼»å’½ç™Œ;
+*cva_yr2åˆ†çµ„;
 /*data TMP1.CVA147;
 set TMP1.CVA147;
 if cva_yr2>=2 & cva_yr2<4 then cvayr2_g='2<=yr<4';
@@ -200,8 +200,8 @@ class CHEMO(ref='0');
 model cva_yr2*cva(0)= CHEMO/ RISKLIMITS;
 run;
 
-*2.ÀYÀVÀù;
-*cva_yr2¤À²Õ;
+*2.é ­é ¸ç™Œ;
+*cva_yr2åˆ†çµ„;
 /*data TMP1.CVA_ELSE;
 set TMP1.CVA_ELSE;
 if cva_yr2>=2 & cva_yr2<4 then cvayr2_g='2<=yr<4';
